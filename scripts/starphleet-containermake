@@ -171,11 +171,14 @@ EOF
     lxc-start --name ${CONTAINER_NAME} -d
     starphleet-lxc-wait ${CONTAINER_NAME} RUNNING
 
-    # start off by assuming we need -L
+    # start off by assuming we need -L in order to capture logs
+    # - mainly upstart, when not started from cloudinit
     LXC_OPT_FOR_STDOUT="-L /dev/stdout"
-    # if it doesn't work, stop using it
+    # if the context the scripts run in causes the -L option to fail, we remove the option
+    # - crontab
+    # - cloudinit
     lxc-attach --name ${CONTAINER_NAME} ${LXC_OPT_FOR_STDOUT} -- bash -c "true" 2> /dev/null || LXC_OPT_FOR_STDOUT=""
-    # if we happen to have a terminal, we don't need it
+    # if we are on a terminal, -L needs to be removed because it causes double outputs
     if [[ -t 0 ]] && [[ -t 1 ]] && [[ -t 2 ]]; then
       LXC_OPT_FOR_STDOUT=""
     fi
