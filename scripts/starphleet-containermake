@@ -177,7 +177,7 @@ EOF
     # if the context the scripts run in causes the -L option to fail, we remove the option
     # - crontab
     # - cloudinit
-    lxc-attach --name ${CONTAINER_NAME} ${LXC_OPT_FOR_STDOUT} -- bash -c "true" 2> /dev/null || LXC_OPT_FOR_STDOUT=""
+    lxc-attach --name ${CONTAINER_NAME} ${LXC_OPT_FOR_STDOUT} -- bash -c "true" || LXC_OPT_FOR_STDOUT=""
     # if we are on a terminal, -L needs to be removed because it causes double outputs
     if [[ -t 0 ]] && [[ -t 1 ]] && [[ -t 2 ]]; then
       LXC_OPT_FOR_STDOUT=""
