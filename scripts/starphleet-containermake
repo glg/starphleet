@@ -72,25 +72,6 @@ else
   # load the ship name as configured in /etc/starphleet-name or, just use the sucky hostname
   SHIP_NAME=$([ -r /etc/starphleet-name ] && $(echo cat /etc/starphleet-name) || echo $(hostname))
 
-  # On LXC >= 1.0.10 - lxc-attach no longer attaches to STDOUT when run
-  # from upstart.  They changed how pty assignments are handled.
-  # From the new docs:
-  #
-  #     -L, --pty-log file
-  #        Specify a file where the output of lxc-attach will be logged.
-  #
-  #        Important: When a standard file descriptor does not refer to
-  #        a pty output produced on it will not be logged.
-  #
-  #  See more here:  http://glg.link/vQpIdw
-  #
-  if [[ "$(lxc --version)" =~ ^1 ]]; then
-    LXC_OPT_FOR_STDOUT="-L /dev/stdout"
-  else
-    LXC_OPT_FOR_STDOUT="-o /dev/stdout"
-  fi
-
-
   # If SERVE_CONTAINERS is _not_ set - we would always want to fall back to
   # default behavior (behavior before introducing container storage).  This
   # probably represents a legacy machine or one not configured for container
@@ -189,6 +170,19 @@ EOF
     info "Starting the container"
     lxc-start --name ${CONTAINER_NAME} -d
     starphleet-lxc-wait ${CONTAINER_NAME} RUNNING
+
+    # start off by assuming we need -L in order to capture logs
+    # - mainly upstart, when not started from cloudinit
+    LXC_OPT_FOR_STDOUT="-L /dev/stdout"
+    # if the context the scripts run in causes the -L option to fail, we remove the option
+    # - crontab
+    # - cloudinit
+    lxc-attach --name ${CONTAINER_NAME} ${LXC_OPT_FOR_STDOUT} -- bash -c "true" 2> /dev/null || LXC_OPT_FOR_STDOUT=""
+    # if we are on a terminal, -L needs to be removed because it causes double outputs
+    if [[ -t 0 ]] && [[ -t 1 ]] && [[ -t 2 ]]; then
+      LXC_OPT_FOR_STDOUT=""
+    fi
+
     lxc-attach --name ${CONTAINER_NAME} ${LXC_OPT_FOR_STDOUT} -- bash starphleet-wait-network
 
     #host file updates
