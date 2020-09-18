@@ -442,6 +442,7 @@ if (token) then
       cookieString = cookieString .. (signedJwtToken and cookie_name .. "=" .. signedJwtToken or '')
       cookieString = cookieString .. (jwt_cookie_domain and '; Domain=' .. jwt_cookie_domain or '')
       cookieString = cookieString .. '; Path=/'
+      userCookieString = userCookieString .. '; SameSite=Lax'
       cookieString = cookieString .. (jwt_expiration_in_seconds and '; Expires=' .. ngx.cookie_time(token.payload.exp) or '')
       table.insert(_setCookie, cookieString)
     end
@@ -469,6 +470,7 @@ if (token) then
       cookieString = cookieString .. (signedJwtToken and cookie_name .. "=" .. signedJwtToken or '')
       cookieString = cookieString .. (jwt_cookie_domain and '; Domain=' .. jwt_cookie_domain or '')
       cookieString = cookieString .. '; Path=/'
+      userCookieString = userCookieString .. '; SameSite=Strict'
       cookieString = cookieString .. (jwt_expiration_in_seconds and '; Expires=' .. ngx.cookie_time(token.payload.exp) or '')
       table.insert(_setCookie, cookieString)
     end
