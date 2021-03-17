@@ -24,7 +24,7 @@ do
   do
     unset BUILD
 
-    for SERVICE_STATUS_FILE in $(find "${CONTAINER_DIRECTORY}" -mindepth 1 -type f -name ".starphleetstatus*" | grep --extended-regexp -e ".*-([a-f0-9]){7}$")
+    for SERVICE_STATUS_FILE in $(find "${CONTAINER_DIRECTORY}" -mindepth 1 -type f -name ".starphleetstatus*" | grep --extended-regexp -e ".*-[a-f0-9]+$")
     do
 
       CURRENT_STATUS=$(cat "${SERVICE_STATUS_FILE}")
