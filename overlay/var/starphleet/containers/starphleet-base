@@ -71,7 +71,7 @@ sudo pip install botocore --force-reinstall --upgrade
 ## Because: https://github.com/aws/aws-cli/issues/3007#issuecomment-350797161
 sudo pip install --upgrade s3transfer
 sudo rm -rf /tmp/pip_build_root/PyYAML
-sudo pip install awscli --force-reinstall --upgrade
+sudo pip install awscli==1.19.44 --force-reinstall --upgrade
 set -e
 
 set -x
