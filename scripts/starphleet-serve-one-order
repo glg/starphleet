@@ -94,7 +94,7 @@ if [ -n "${DEVMODE_UNBIND_GIT_DIR}" ] && dev_mode ; then
     # File Change Detection
     # **************************************
     # Only check for changed files if the they specified to unbind the git dir
-    RUNNING=$(lxc-ls -f | grep RUNNING | grep --extended-regexp -e "^${ORDER}-([a-f0-9]){7}-([a-f0-9]){7}"  | cut -f1 -d" ")
+    RUNNING=$(lxc-ls -f | grep RUNNING | grep --extended-regexp -e "^${ORDER}-[a-f0-9]+-[a-f0-9]+"  | cut -f1 -d" ")
     # Define a temp file to check for changed files
     CHANGED_FILES_FILE="/tmp/${ORDER}.starphleet.newfiles"
     # Exclude git and node_modules directory which heavily improves performance.

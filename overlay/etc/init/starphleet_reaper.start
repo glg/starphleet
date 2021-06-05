@@ -36,7 +36,7 @@ do
     # Run through all the status files inside this order directory and
     # see if any of these status files don't match up with the container
     # that should be running
-    for CONTAINER_STATUS_FILE in $(find "${CURRENT_ORDERS}/${order}/" -type f -name ".starphleetstatus*" | grep --extended-regexp -e ".*-([a-f0-9]){7}$")
+    for CONTAINER_STATUS_FILE in $(find "${CURRENT_ORDERS}/${order}/" -type f -name ".starphleetstatus*" | grep --extended-regexp -e ".*-[a-f0-9]+$")
     do
 
         # Yoink just the container name off the status file
